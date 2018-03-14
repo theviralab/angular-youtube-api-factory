@@ -25,7 +25,7 @@ Author: Jonathan Hornung ([JohnnyTheTank](https://github.com/JohnnyTheTank))
     <script src="angular-youtube-api-factory.min.js"></script>
     ```
 3. Add **`jtt_youtube`** to your application's module dependencies
-  
+
     ```JavaScript
     angular.module('app', ['jtt_youtube']);
     ```
@@ -34,14 +34,14 @@ Author: Jonathan Hornung ([JohnnyTheTank](https://github.com/JohnnyTheTank))
     ```JavaScript
     angular.module('app')
         .controller('appController', function($scope, youtubeFactory){
-        
+
             youtubeFactory.getVideosFromSearchByParams({
                 q: 'fcbayern',
                 key: '<YOUR_API_KEY>'
             }).then(function (data) {
                 console.info('videos from search by query', data);
             });
-            
+
         });
     ```
 
@@ -155,6 +155,9 @@ youtubeFactory.getChannelById({
 });
 ```
 
+
+##### getChannels
+TODO
 
 ## Youtube Data JSON API
 * Docs: https://developers.google.com/youtube/v3/docs/
