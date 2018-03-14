@@ -156,7 +156,7 @@ youtubeFactory.getChannelById({
 ```
 
 
-##### getChannels
+#### getChannels
 TODO
 
 ## Youtube Data JSON API

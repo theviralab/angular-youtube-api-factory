@@ -1,11 +1,11 @@
 "use strict";
 
 angular.module("jtt_youtube", [])
-    .factory('youtubeFactory', ['$http', 'youtubeSearchDataService', function ($http, youtubeSearchDataService) {
+    .factory('youtubeFactory', ['$http', 'youtubeSearchDataService', function($http, youtubeSearchDataService) {
 
         var youtubeFactory = {};
 
-        youtubeFactory.getVideosFromChannelById = function (_params) {
+        youtubeFactory.getVideosFromChannelById = function(_params) {
             var youtubeSearchData = youtubeSearchDataService.getNew("videosFromChannelById", _params);
             return $http({
                 method: 'GET',
@@ -14,7 +14,7 @@ angular.module("jtt_youtube", [])
             });
         };
 
-        youtubeFactory.getVideosFromSearchByParams = function (_params) {
+        youtubeFactory.getVideosFromSearchByParams = function(_params) {
             var youtubeSearchData = youtubeSearchDataService.getNew("videosFromSearchByParams", _params);
             return $http({
                 method: 'GET',
@@ -23,7 +23,7 @@ angular.module("jtt_youtube", [])
             });
         };
 
-        youtubeFactory.getVideosFromPlaylistById = function (_params) {
+        youtubeFactory.getVideosFromPlaylistById = function(_params) {
             var youtubeSearchData = youtubeSearchDataService.getNew("videosFromPlaylistById", _params);
             return $http({
                 method: 'GET',
@@ -32,7 +32,7 @@ angular.module("jtt_youtube", [])
             });
         };
 
-        youtubeFactory.getChannelById = function (_params) {
+        youtubeFactory.getChannelById = function(_params) {
             var youtubeSearchData = youtubeSearchDataService.getNew("channelById", _params);
             return $http({
                 method: 'GET',
@@ -41,7 +41,16 @@ angular.module("jtt_youtube", [])
             });
         };
 
-        youtubeFactory.getChannelByUsername = function (_params) {
+        youtubeFactory.getChannelsById = function(_params) {
+            var youtubeSearchData = youtubeSearchDataService.getNew("channelsById", _params);
+            return $http({
+                method: 'GET',
+                url: youtubeSearchData.url,
+                params: youtubeSearchData.object,
+            });
+        };
+
+        youtubeFactory.getChannelByUsername = function(_params) {
             var youtubeSearchData = youtubeSearchDataService.getNew("channelByUsername", _params);
             return $http({
                 method: 'GET',
@@ -50,7 +59,7 @@ angular.module("jtt_youtube", [])
             });
         };
 
-        youtubeFactory.getVideoById = function (_params) {
+        youtubeFactory.getVideoById = function(_params) {
             var youtubeSearchData = youtubeSearchDataService.getNew("videoById", _params);
             return $http({
                 method: 'GET',
@@ -61,15 +70,15 @@ angular.module("jtt_youtube", [])
 
         return youtubeFactory;
     }])
-    .service('youtubeSearchDataService', function () {
-        this.getApiBaseUrl = function (_params) {
+    .service('youtubeSearchDataService', function() {
+        this.getApiBaseUrl = function(_params) {
             return "https://content.googleapis.com/youtube/v3/";
         };
 
-        this.fillDataInObjectByList = function (_object, _params, _list) {
+        this.fillDataInObjectByList = function(_object, _params, _list) {
 
-            angular.forEach(_list, function (value, key) {
-                if (typeof value !== "undefined"  && value.constructor === Array) {
+            angular.forEach(_list, function(value, key) {
+                if (typeof value !== "undefined" && value.constructor === Array) {
                     if (angular.isDefined(_params[value[0]])) {
                         _object.object[value[0]] = _params[value[0]];
                     } else {
@@ -85,7 +94,7 @@ angular.module("jtt_youtube", [])
             return _object;
         };
 
-        this.getNew = function (_type, _params) {
+        this.getNew = function(_type, _params) {
 
             var youtubeSearchData = {
                 object: {
@@ -198,10 +207,21 @@ angular.module("jtt_youtube", [])
                     break;
 
                 case 'channelByUsername':
-
                     youtubeSearchData = this.fillDataInObjectByList(youtubeSearchData, _params, [
                         ['part', 'id,snippet'],
                         'forUsername'
+                    ]);
+
+                    youtubeSearchData.url = this.getApiBaseUrl() + 'channels?';
+                    if (_params.nextPageToken || _params.prevPageToken) {
+                        youtubeSearchData.url += 'pageToken=' + (_params.nextPageToken || _params.prevPageToken) + '&';
+                    }
+                    break;
+
+                case 'channelsById':
+                    youtubeSearchData = this.fillDataInObjectByList(youtubeSearchData, _params, [
+                        ['part', 'id,snippet'],
+                        'id'
                     ]);
 
                     youtubeSearchData.url = this.getApiBaseUrl() + 'channels?';
